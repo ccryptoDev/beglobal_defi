@@ -1,0 +1,16 @@
+{
+  "short_name": "BeGlobal",
+  "name": "Global",
+  "description": "Trade tokens, stake LP to earn GLOBAL and boost your APR with our yield optimizator",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "type": "image/x-icon",
+      "sizes": "256x256"
+    }
+  ],
+  "orientation": "portrait",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}

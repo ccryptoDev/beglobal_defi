@@ -1,0 +1,40 @@
+stages:
+  - build-swap
+  - deploy-swap
+
+variables:
+  S3_BUCKET: 'swap-beglobal'
+
+build-swap:
+  stage: build-swap
+  image: node:14.17.1
+  cache:
+      key: $CI_COMMIT_REF_SLUG-build
+      paths:
+        - build/
+      policy: push
+  script:
+    - yarn install
+    - yarn build
+    - echo "$S3_BUCKET"
+
+
+deploy-swap:
+  stage: deploy-swap
+  image: alpine:latest
+  cache:
+      key: $CI_COMMIT_REF_SLUG-build
+      paths:
+        - build/
+      policy: pull
+  only:
+    - master
+  allow_failure: false
+  before_script:
+    - apk add --no-cache make jq py-pip
+    - pip install awscli
+  script:
+    - echo 🚀️ executing deploy on production environment
+    - aws s3 sync build/ s3://${S3_BUCKET}/ --delete --region eu-west-2
+    - echo Clearing cache on CDN CloudFront
+    - aws cloudfront create-invalidation --distribution-id E3TPLQV4JACJBT --paths "/*"
